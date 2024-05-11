@@ -11,7 +11,9 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.wizarpos.wizarviewagentassistant.aidl.IModifyAdminPwdService;
@@ -21,6 +23,7 @@ public class MainActivity extends Activity {
 
     private Button confirmBtn;
     private Button resetBtn;
+    private Switch switchBtn;
     private EditText passwordEdit;
     private Context mContext;
     private static final String TAG = "MainActivity";
@@ -31,9 +34,27 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         confirmBtn = findViewById(R.id.confirm);
         resetBtn = findViewById(R.id.reset);
+        switchBtn = findViewById(R.id.loginSwitch);
         passwordEdit = findViewById(R.id.password);
         confirmBtn.setOnClickListener(btnClickListener);
         resetBtn.setOnClickListener(btnClickListener);
+        switchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                try {
+                    boolean result = adminPwdService.enableUserLogin(isChecked);
+                    if (result) {
+                        Toast.makeText(mContext, isChecked ? "enables success!" : "disables success!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mContext, isChecked ? "enables failed!" : "disables failed!", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (RemoteException e) {
+                    switchBtn.setChecked(!isChecked);
+                    e.printStackTrace();
+                    Log.e(TAG, "Remote exception:", e);
+                }
+            }
+        });
         mContext = this;
         bindService();
     }
@@ -48,9 +69,10 @@ public class MainActivity extends Activity {
         public void onServiceConnected(ComponentName name, IBinder service) {
             try {
                 adminPwdService = IModifyAdminPwdService.Stub.asInterface(service);
-                Log.d("IModifyAdminPwdService","IModifyAdminPwdService bind success.");
+                Log.d("IModifyAdminPwdService", "IModifyAdminPwdService bind success.");
             } catch (Exception e) {
                 e.printStackTrace();
+                Log.e(TAG, "Remote exception:", e);
             } finally {
                 unbindService(this);
             }
@@ -59,7 +81,7 @@ public class MainActivity extends Activity {
     };
 
     public void bindService() {
-        ComponentName comp = new ComponentName (
+        ComponentName comp = new ComponentName(
                 "com.wizarpos.wizarviewagentassistant",
                 "com.wizarpos.wizarviewagentassistant.AdminPwdMainService");
         startService(this, comp, serviceConnection);
@@ -84,25 +106,25 @@ public class MainActivity extends Activity {
             if (newPwd.trim().isEmpty()) {
                 Toast.makeText(mContext, "please enter the password", Toast.LENGTH_SHORT).show();
             } else {
-                try{
+                try {
                     if (btn.getId() == R.id.confirm) {
                         boolean isUserPwd = adminPwdService.isUserPwd(newPwd);
-                        if (isUserPwd){
+                        if (isUserPwd) {
                             Toast.makeText(mContext, "login success!", Toast.LENGTH_SHORT).show();
-                        }else{
+                        } else {
                             Toast.makeText(mContext, "login failed!", Toast.LENGTH_SHORT).show();
                         }
-                    } else if (btn.getId() == R.id.reset){
+                    } else if (btn.getId() == R.id.reset) {
                         boolean result = adminPwdService.forceModifyUserPwd(newPwd);
-                        if (result){
+                        if (result) {
                             Toast.makeText(mContext, "update password success!", Toast.LENGTH_SHORT).show();
-                        }else{
+                        } else {
                             Toast.makeText(mContext, "update password failed", Toast.LENGTH_SHORT).show();
                         }
                     }
-                }catch (RemoteException e){
+                } catch (RemoteException e) {
                     e.printStackTrace();
-                    Log.e(TAG,"Remote exception:",e);
+                    Log.e(TAG, "Remote exception:", e);
                 }
             }
         }

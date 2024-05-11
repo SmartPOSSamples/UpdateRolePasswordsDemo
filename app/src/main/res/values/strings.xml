@@ -2,8 +2,7 @@
 <resources>
 
     <string name="app_name">UpdateRolePasswordsDemo</string>
-    <string name="password">Please Enter Password:</string>
-    <string name="action_settings">LOCATION</string>
-    <string name="wlan_settings">WLAN</string>
+    <string name="password">Enter Password:</string>
+    <string name="user_status">User Login Status:</string>
 
 </resources>

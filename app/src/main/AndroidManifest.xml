@@ -3,8 +3,10 @@
     package="com.example.userdemo"
     android:versionCode="1"
     android:versionName="1.0">
-    <uses-permission android:name="android.permission.USER_PWD"/>
-    <uses-permission android:name="android.permission.USER_PWD_MODIFY"/>
+
+    <uses-permission android:name="android.permission.USER_PWD" />
+    <uses-permission android:name="android.permission.USER_PWD_MODIFY" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
