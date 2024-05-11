@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">UpdateRolePasswordsDemo</string>
+    <string name="password">Please Enter Password:</string>
+    <string name="action_settings">LOCATION</string>
+    <string name="wlan_settings">WLAN</string>
+
+</resources>
