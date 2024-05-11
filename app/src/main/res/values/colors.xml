@@ -17,8 +17,8 @@
     <color name="RED">#FF0000</color>
     <color name="GREEN">#00FF00</color>
     <color name="BLUE">#0000FF</color>
-    <color name="WHITE">#000000</color>
-    <color name="BLACK">#FFFFFF</color>
+    <color name="BLACK">#000000</color>
+    <color name="WHITE">#FFFFFF</color>
     <color name="transparent">#00000000</color>
 
 </resources>

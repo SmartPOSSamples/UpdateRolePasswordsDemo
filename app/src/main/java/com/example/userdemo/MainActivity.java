@@ -23,6 +23,8 @@ public class MainActivity extends Activity {
 
     private Button confirmBtn;
     private Button resetBtn;
+    private Button enableBtn;
+    private Button disableBtn;
     private Switch switchBtn;
     private EditText passwordEdit;
     private Context mContext;
@@ -34,27 +36,13 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         confirmBtn = findViewById(R.id.confirm);
         resetBtn = findViewById(R.id.reset);
-        switchBtn = findViewById(R.id.loginSwitch);
+        enableBtn = findViewById(R.id.enableLogin);
+        disableBtn = findViewById(R.id.disableLogin);
         passwordEdit = findViewById(R.id.password);
         confirmBtn.setOnClickListener(btnClickListener);
         resetBtn.setOnClickListener(btnClickListener);
-        switchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                try {
-                    boolean result = adminPwdService.enableUserLogin(isChecked);
-                    if (result) {
-                        Toast.makeText(mContext, isChecked ? "enables success!" : "disables success!", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(mContext, isChecked ? "enables failed!" : "disables failed!", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (RemoteException e) {
-                    switchBtn.setChecked(!isChecked);
-                    e.printStackTrace();
-                    Log.e(TAG, "Remote exception:", e);
-                }
-            }
-        });
+        enableBtn.setOnClickListener(btnClickListener);
+        disableBtn.setOnClickListener(btnClickListener);
         mContext = this;
         bindService();
     }
@@ -103,18 +91,22 @@ public class MainActivity extends Activity {
         public void onClick(View v) {
             Button btn = (Button) v;
             String newPwd = passwordEdit.getText().toString();
-            if (newPwd.trim().isEmpty()) {
-                Toast.makeText(mContext, "please enter the password", Toast.LENGTH_SHORT).show();
-            } else {
-                try {
-                    if (btn.getId() == R.id.confirm) {
+            try {
+                if (btn.getId() == R.id.confirm) {
+                    if (newPwd.trim().isEmpty()) {
+                        Toast.makeText(mContext, "please enter the password", Toast.LENGTH_SHORT).show();
+                    } else {
                         boolean isUserPwd = adminPwdService.isUserPwd(newPwd);
                         if (isUserPwd) {
                             Toast.makeText(mContext, "login success!", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(mContext, "login failed!", Toast.LENGTH_SHORT).show();
                         }
-                    } else if (btn.getId() == R.id.reset) {
+                    }
+                } else if (btn.getId() == R.id.reset) {
+                    if (newPwd.trim().isEmpty()) {
+                        Toast.makeText(mContext, "please enter the password", Toast.LENGTH_SHORT).show();
+                    } else {
                         boolean result = adminPwdService.forceModifyUserPwd(newPwd);
                         if (result) {
                             Toast.makeText(mContext, "update password success!", Toast.LENGTH_SHORT).show();
@@ -122,17 +114,26 @@ public class MainActivity extends Activity {
                             Toast.makeText(mContext, "update password failed", Toast.LENGTH_SHORT).show();
                         }
                     }
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                    Log.e(TAG, "Remote exception:", e);
+                } else if (btn.getId() == R.id.enableLogin) {
+                    boolean result = adminPwdService.enableUserLogin(true);
+                    if (result) {
+                        Toast.makeText(mContext, "enables success!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mContext, "enables failed!", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (btn.getId() == R.id.disableLogin) {
+                    boolean result = adminPwdService.enableUserLogin(false);
+                    if (result) {
+                        Toast.makeText(mContext, "disables success!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mContext, "disables failed!", Toast.LENGTH_SHORT).show();
+                    }
                 }
+            } catch (RemoteException e) {
+                e.printStackTrace();
+                Log.e(TAG, "Remote exception:", e);
             }
         }
     };
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbindService(serviceConnection);
-    }
 }
