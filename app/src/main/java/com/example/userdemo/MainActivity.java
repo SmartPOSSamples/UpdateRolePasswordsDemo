@@ -94,39 +94,39 @@ public class MainActivity extends Activity {
             try {
                 if (btn.getId() == R.id.confirm) {
                     if (newPwd.trim().isEmpty()) {
-                        Toast.makeText(mContext, "please enter the password", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Please enter your password", Toast.LENGTH_SHORT).show();
                     } else {
                         boolean isUserPwd = adminPwdService.isUserPwd(newPwd);
                         if (isUserPwd) {
-                            Toast.makeText(mContext, "login success!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "Login success!", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(mContext, "login failed!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "Login failed!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else if (btn.getId() == R.id.reset) {
                     if (newPwd.trim().isEmpty()) {
-                        Toast.makeText(mContext, "please enter the password", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Please enter your password", Toast.LENGTH_SHORT).show();
                     } else {
                         boolean result = adminPwdService.forceModifyUserPwd(newPwd);
                         if (result) {
-                            Toast.makeText(mContext, "update password success!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "Update password success!", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(mContext, "update password failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "Update password failed", Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else if (btn.getId() == R.id.enableLogin) {
                     boolean result = adminPwdService.enableUserLogin(true);
                     if (result) {
-                        Toast.makeText(mContext, "enables success!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Enable login success!", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(mContext, "enables failed!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Enable login failed!", Toast.LENGTH_SHORT).show();
                     }
                 } else if (btn.getId() == R.id.disableLogin) {
                     boolean result = adminPwdService.enableUserLogin(false);
                     if (result) {
-                        Toast.makeText(mContext, "disables success!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Disable login success!", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(mContext, "disables failed!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Disable login failed!", Toast.LENGTH_SHORT).show();
                     }
                 }
             } catch (RemoteException e) {
